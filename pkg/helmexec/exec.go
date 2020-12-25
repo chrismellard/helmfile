@@ -157,6 +157,22 @@ func (helm *execer) UpdateRepo() error {
 	return err
 }
 
+func (helm *execer) RegistryLogin(repository string, username string, password string) error {
+	helm.logger.Info("Logging in to registry")
+	args := []string{
+		"registry",
+		"login",
+		repository,
+		"--username",
+		username,
+		"--password",
+		password,
+	}
+	out, err := helm.exec(args, map[string]string{"HELM_EXPERIMENTAL_OCI": "1"})
+	helm.info(out)
+	return err
+}
+
 func (helm *execer) BuildDeps(name, chart string) error {
 	helm.logger.Infof("Building dependency release=%v, chart=%v", name, chart)
 	out, err := helm.exec([]string{"dependency", "build", chart}, map[string]string{})
@@ -365,6 +381,20 @@ func (helm *execer) Lint(name, chart string, flags ...string) error {
 func (helm *execer) Fetch(chart string, flags ...string) error {
 	helm.logger.Infof("Fetching %v", chart)
 	out, err := helm.exec(append([]string{"fetch", chart}, flags...), map[string]string{})
+	helm.info(out)
+	return err
+}
+
+func (helm *execer) ChartPull(chart string, flags ...string) error {
+	helm.logger.Infof("Pulling %v", chart)
+	out, err := helm.exec(append([]string{"chart", "pull", chart}, flags...), map[string]string{"HELM_EXPERIMENTAL_OCI": "1"})
+	helm.info(out)
+	return err
+}
+
+func (helm *execer) ChartExport(chart string, path string, flags ...string) error {
+	helm.logger.Infof("Exporting %v", chart)
+	out, err := helm.exec(append([]string{"chart", "export", chart, "--destination", path}, flags...), map[string]string{"HELM_EXPERIMENTAL_OCI": "1"})
 	helm.info(out)
 	return err
 }

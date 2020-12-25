@@ -2441,6 +2441,14 @@ func (helm *mockHelmExec) TemplateRelease(name, chart string, flags ...string) e
 	return nil
 }
 
+func (helm *mockHelmExec) ChartPull(chart string, flags ...string) error {
+	return nil
+}
+
+func (helm *mockHelmExec) ChartExport(chart string, path string, flags ...string) error {
+	return nil
+}
+
 func (helm *mockHelmExec) UpdateDeps(chart string) error {
 	return nil
 }
@@ -2460,6 +2468,9 @@ func (helm *mockHelmExec) AddRepo(name, repository, cafile, certfile, keyfile, u
 	return nil
 }
 func (helm *mockHelmExec) UpdateRepo() error {
+	return nil
+}
+func (helm *mockHelmExec) RegistryLogin(name string, username string, password string) error {
 	return nil
 }
 func (helm *mockHelmExec) SyncRelease(context helmexec.HelmContext, name, chart string, flags ...string) error {
